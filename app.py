@@ -173,15 +173,6 @@ if uploaded is None:
     c2.markdown('<div class="cas-card"><h4>⬇️ Reliable Download</h4><p>XLSX or CSV export — works for you <i>and</i> every colleague on the shared URL.</p></div>', unsafe_allow_html=True)
     c3.markdown('<div class="cas-card"><h4>📊 Smart Analytics</h4><p>Data Health · Trends · Correlations · Distribution · Outlier Detection · Ranker.</p></div>', unsafe_allow_html=True)
     st.markdown("---")
-    st.markdown("### ▶️ How to Start Streamlit")
-    st.code("py -m streamlit run app.py", language="bash")
-    st.markdown("### 👥 Download for Colleagues")
-    st.markdown("""
-| Action | Saves to |
-|---|---|
-| Click **⬇️ Download** | **Your** machine |
-| Colleague clicks **⬇️ Download** on shared URL | **Their** machine |
-    """)
     st.stop()
 
 
@@ -265,6 +256,12 @@ with st.sidebar:
     st.markdown("### 📥 Export")
     exp_fmt = st.radio("Format", ["CSV (Text)", "XLSX (Excel)"], horizontal=True)
 
+    ext_default = "csv" if "CSV" in exp_fmt else "xlsx"
+    custom_name = st.text_input("📝 File Name", value=f"CAS_Export.{ext_default}", placeholder="Enter file name...")
+    # Ensure the extension matches the selected format
+    if not custom_name.endswith(f".{ext_default}"):
+        custom_name = custom_name.rsplit(".", 1)[0] + f".{ext_default}" if "." in custom_name else custom_name + f".{ext_default}"
+
     if st.button("🚀 Prepare Export", use_container_width=True, type="primary"):
         st.session_state.export_ready = True
 
@@ -277,12 +274,11 @@ with st.sidebar:
         kb = len(data_bytes)/1024
         st.success(f"✅ Ready — {kb:.1f} KB")
         st.download_button(
-            label=f"⬇️  Download {f_name}",
-            data=data_bytes, file_name=f_name, mime=m_type,
+            label=f"⬇️  Download {custom_name}",
+            data=data_bytes, file_name=custom_name, mime=m_type,
             use_container_width=True,
             key=f"dl_{hashlib.md5(data_bytes[:200]).hexdigest()}"
         )
-        st.markdown('<div class="colleague-note">👥 Colleagues: this button downloads to <i>their</i> machine on your shared URL.</div>', unsafe_allow_html=True)
 
 
 # ══════════════════════════════════════════════════════
