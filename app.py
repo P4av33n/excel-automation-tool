@@ -51,6 +51,10 @@ html,body,[class*="css"]{font-family:'Inter',sans-serif;}
 .stAppToolbar {visibility: hidden !important; display: none !important;}
 header[data-testid="stHeader"] a[href*="github"] {display: none !important;}
 button[title="Fork this app"] {display: none !important;}
+/* ── Always show sidebar collapse/expand toggle ── */
+[data-testid="collapsedControl"] {display: flex !important; visibility: visible !important; opacity: 1 !important;}
+section[data-testid="stSidebarCollapsedControl"] {display: flex !important; visibility: visible !important; opacity: 1 !important;}
+button[data-testid="baseButton-header"] {display: flex !important; visibility: visible !important;}
 </style>
 """, unsafe_allow_html=True)
 
