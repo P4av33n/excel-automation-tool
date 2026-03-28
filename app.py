@@ -46,6 +46,11 @@ html,body,[class*="css"]{font-family:'Inter',sans-serif;}
 .stat-table tr:nth-child(even) td{background:rgba(79,70,229,0.05);}
 .stat-table td{padding:7px 12px;color:inherit;border-bottom:1px solid rgba(79,70,229,0.1);}
 .row-badge{display:inline-block;background:#e0e7ff;color:#3730a3;border-radius:20px;padding:3px 12px;font-size:.8rem;font-weight:600;}
+/* ── Hide Streamlit Cloud fork/github toolbar ── */
+[data-testid="stToolbar"] {visibility: hidden !important; display: none !important;}
+.stAppToolbar {visibility: hidden !important; display: none !important;}
+header[data-testid="stHeader"] a[href*="github"] {display: none !important;}
+button[title="Fork this app"] {display: none !important;}
 </style>
 """, unsafe_allow_html=True)
 
