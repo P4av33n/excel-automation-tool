@@ -7,7 +7,7 @@ import io, time, os, hashlib
 #  PAGE CONFIG
 # ══════════════════════════════════════════════════════
 st.set_page_config(
-    page_title="CAS Pro – Excel Automation",
+    page_title="Excel Automation Tool",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -36,10 +36,10 @@ html,body,[class*="css"]{font-family:'Inter',sans-serif;}
 .header-banner{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 55%,#0d9488 100%);padding:24px 30px;border-radius:16px;margin-bottom:16px;box-shadow:0 8px 32px rgba(79,70,229,.25);}
 .header-banner h1{color:white;margin:0;font-size:1.85rem;font-weight:800;}
 .header-banner p{color:rgba(255,255,255,.82);margin:5px 0 0;font-size:.9rem;}
-.cas-card{background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.2);border-radius:14px;padding:20px 22px;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:transform .15s;}
-.cas-card:hover{transform:translateY(-3px);background:rgba(79,70,229,0.12);}
-.cas-card h4{color:#818cf8;font-size:.95rem;font-weight:700;margin:0 0 5px;}
-.cas-card p{color:inherit;opacity:0.9;font-size:.85rem;margin:0;line-height:1.55;}
+.app-card{background:rgba(79,70,229,0.08);border:1px solid rgba(79,70,229,0.2);border-radius:14px;padding:20px 22px;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:transform .15s;}
+.app-card:hover{transform:translateY(-3px);background:rgba(79,70,229,0.12);}
+.app-card h4{color:#818cf8;font-size:.95rem;font-weight:700;margin:0 0 5px;}
+.app-card p{color:inherit;opacity:0.9;font-size:.85rem;margin:0;line-height:1.55;}
 .colleague-note{font-size:.82rem;color:#065f46;background:#d1fae5;border-left:4px solid #10b981;border-radius:0 8px 8px 0;padding:9px 12px;margin-top:8px;}
 .stat-table{width:100%;border-collapse:collapse;font-size:.87rem;}
 .stat-table th{background:#4f46e5;color:white;padding:8px 12px;text-align:left;font-weight:600;}
@@ -106,14 +106,14 @@ def build_export(_df: pl.DataFrame, fmt: str, start: int, end: int, meta: str):
     buf   = io.BytesIO()
     if "XLSX" in fmt:
         # Use native Polars write_excel for orders of magnitude faster writing than Pandas
-        chunk.write_excel(buf, worksheet="CAS_Export")
+        chunk.write_excel(buf, worksheet="Excel_Export")
         mime, ext = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "xlsx"
     else:
         # CSV is MUCH faster directly from Polars
         buf.write(chunk.write_csv().encode('utf-8-sig'))
         mime, ext = "text/csv", "csv"
     buf.seek(0)
-    return buf.getvalue(), f"CAS_Export.{ext}", mime
+    return buf.getvalue(), f"Excel_Export.{ext}", mime
 
 @st.cache_data(show_spinner=False)
 def compute_health(_df: pl.DataFrame, meta: str):
@@ -154,8 +154,8 @@ def compute_top(_df: pl.DataFrame, col: str, n: int, meta: str):
 # ══════════════════════════════════════════════════════
 st.markdown("""
 <div class="header-banner">
-  <h1>📊 CAS Pro &mdash; Excel Automation Tool</h1>
-  <p>High-performance workbench &nbsp;·&nbsp; CSV &amp; XLSX &nbsp;·&nbsp; 500,000+ rows &nbsp;·&nbsp; Corporate Accounting Solutions</p>
+  <h1>📊 Excel Automation Tool</h1>
+  <p>High-performance workbench &nbsp;·&nbsp; CSV &amp; XLSX &nbsp;·&nbsp; 500,000+ rows</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -168,11 +168,11 @@ uploaded = st.file_uploader("Upload your file — CSV or Excel (.csv, .xlsx, .xl
 
 if uploaded is None:
     st.markdown("---")
-    st.markdown("### 🚀 What CAS Pro Does")
+    st.markdown("### 🚀 Tool Features")
     c1, c2, c3 = st.columns(3)
-    c1.markdown('<div class="cas-card"><h4>⚡ Hyper-Speed Loading</h4><p>Polars engine loads 500k+ rows in seconds. Displays file size, load time &amp; MB/s.</p></div>', unsafe_allow_html=True)
-    c2.markdown('<div class="cas-card"><h4>⬇️ Reliable Download</h4><p>XLSX or CSV export — works for you <i>and</i> every colleague on the shared URL.</p></div>', unsafe_allow_html=True)
-    c3.markdown('<div class="cas-card"><h4>📊 Smart Analytics</h4><p>Data Health · Trends · Correlations · Distribution · Outlier Detection · Ranker.</p></div>', unsafe_allow_html=True)
+    c1.markdown('<div class="app-card"><h4>⚡ Hyper-Speed Loading</h4><p>Polars engine loads 500k+ rows in seconds. Displays file size, load time &amp; MB/s.</p></div>', unsafe_allow_html=True)
+    c2.markdown('<div class="app-card"><h4>⬇️ Reliable Download</h4><p>XLSX or CSV export — works for you <i>and</i> every colleague on the shared URL.</p></div>', unsafe_allow_html=True)
+    c3.markdown('<div class="app-card"><h4>📊 Smart Analytics</h4><p>Data Health · Trends · Correlations · Distribution · Outlier Detection · Ranker.</p></div>', unsafe_allow_html=True)
     st.markdown("---")
     st.stop()
 
@@ -258,7 +258,7 @@ with st.sidebar:
     exp_fmt = st.radio("Format", ["CSV (Text)", "XLSX (Excel)"], horizontal=True)
 
     ext_default = "csv" if "CSV" in exp_fmt else "xlsx"
-    custom_name = st.text_input("📝 File Name", value=f"CAS_Export.{ext_default}", placeholder="Enter file name...")
+    custom_name = st.text_input("📝 File Name", value=f"Excel_Export.{ext_default}", placeholder="Enter file name...")
     # Ensure the extension matches the selected format
     if not custom_name.endswith(f".{ext_default}"):
         custom_name = custom_name.rsplit(".", 1)[0] + f".{ext_default}" if "." in custom_name else custom_name + f".{ext_default}"
